@@ -18,6 +18,7 @@ use fostercommerce\meilisearch\jobs\Sync as SyncJob;
 use fostercommerce\meilisearch\models\Index;
 use fostercommerce\meilisearch\models\Settings;
 use fostercommerce\meilisearch\records\Source;
+use fostercommerce\meilisearch\services\CraftSearch;
 use fostercommerce\meilisearch\services\Search;
 use fostercommerce\meilisearch\services\Sync;
 use fostercommerce\meilisearch\utilities\Indices;
@@ -67,6 +68,13 @@ class Plugin extends BasePlugin
 		});
 
 		$settings = $this->getSettings();
+
+		// Override Craft Search if configured
+		if (!empty($settings->getCraftSearch())) {
+			Craft::$app->setComponents([
+				'search' => CraftSearch::class,
+			]);
+		}
 
 		Event::on(Gc::class, Gc::EVENT_RUN, static function () use ($settings): void {
 			Queue::push(new CleanUpSwapDataJob([

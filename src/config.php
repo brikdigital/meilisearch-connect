@@ -29,6 +29,20 @@ return [
 	 */
 	'garbageCollectionAge' => '1 day ago',
 	/**
+	 * Maps Craft section handles to Meilisearch index handles for Craft's native search.
+	 * Use `*` as the site handle to apply an index to every site in that section.
+	 */
+	'craftSearch' => [
+		'pages' => [
+			'*' => 'pages'
+		]
+	],
+	/**
+	 * How long, in seconds, to cache the eligible Craft element IDs for a search scope.
+	 * This cache is used for public site requests; set to 0 or less to disable it.
+	 */
+	'scopeCacheDuration' => 300,
+	/**
 	 * A list of indices that can be created and/or searched.
 	 */
 	'indices' => [

@@ -36,6 +36,18 @@ class Settings extends Model
 	public ?string $garbageCollectionAge = '1 day ago';
 
 	/**
+	 * Maps Craft section handles to Meilisearch index handles for Craft's native search.
+	 * Use `*` as the site handle to apply an index to every site in that section.
+	 */
+	public array $craftSearch = [];
+
+	/**
+	 * How long, in seconds, to cache the eligible Craft element IDs for a search scope.
+	 * This cache is used for public site requests; set to 0 or less to disable it.
+	 */
+	public int $scopeCacheDuration = 300;
+
+	/**
 	 * A list of configured indices
 	 *
 	 * @var array<non-empty-string, Index>
@@ -96,5 +108,22 @@ class Settings extends Model
 			)
 			->values()
 			->all();
+	}
+
+	public function getCraftSearch(?string $sectionHandle = null, ?string $siteHandle = null): mixed
+	{
+		if ($sectionHandle !== null) {
+			if (isset($this->craftSearch[$sectionHandle][$siteHandle])) {
+				return $this->craftSearch[$sectionHandle][$siteHandle];
+			}
+
+			if (isset($this->craftSearch[$sectionHandle]['*'])) {
+				return $this->craftSearch[$sectionHandle]['*'];
+			}
+
+			return null;
+		}
+
+		return $this->craftSearch;
 	}
 }
